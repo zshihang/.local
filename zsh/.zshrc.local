@@ -1,0 +1,108 @@
+# stop frozen vim
+stty -ixon
+stty ixany
+
+compdef tmx2=tmux
+
+# aliases
+alias vimconfiggoogle="vim ~/.vimrc.google"
+alias hgconfig="vim ~/.hgrc"
+alias admin_span='/google/data/ro/teams/axt-storage/admin_span/live/admin_span'
+if [ ! -z "${GOOGLE_DP_ADMIN_SESSION}" ]; then
+  . /google/src/head/depot/google3/cloud/kubernetes/engine/tools/proxy/proxy_aliases.sh
+fi
+alias tool-proxy='tool-proxy-cli --tool_proxy=blade:cloud-kubernetes-automation-tool-proxy-prod'
+alias proxy-flex='tool-proxy --tool=flex --'
+alias proxy-monarch_tool='tool-proxy --tool=monarch_tool --'
+alias proxy-span='tool-proxy --tool=span --'
+alias proxy-admin_span='tool-proxy --tool=admin_span --'
+alias admin_session='/google/data/ro/projects/tonic/admin_session'
+alias get_mint="/google/data/ro/projects/gaiamint/bin/get_mint"
+alias mdformat=/google/data/ro/teams/g3doc/mdformat
+alias pastebin="/google/src/head/depot/eng/tools/pastebin"
+alias setup_gke_dev=cloud/kubernetes/engine/scripts/setup_gke_dev/setup_gke_dev.sh
+alias giraffe='/google/bin/releases/gke-giraffe/tools/prod/main'
+
+function gcert() {
+  if [[ -n $TMUX ]]; then
+    eval $(tmux show-environment -s)
+  fi
+
+  command gcert "$@"
+}
+
+fixup_ssh_auth_sock() {
+  if [[ -n ${SSH_AUTH_SOCK} && ! -e ${SSH_AUTH_SOCK} ]]
+  then
+    local new_sock=$(echo /tmp/ssh-*/agent.*(=UNom[1]))
+     if [[ -n ${new_sock} ]]
+     then
+       export SSH_AUTH_SOCK=${new_sock}
+     fi
+  fi
+}
+if [[ -n ${SSH_AUTH_SOCK} ]]
+then
+  autoload -U add-zsh-hook
+  add-zsh-hook preexec fixup_ssh_auth_sock
+fi
+
+function bb() {
+  if [[ $PWD =~ '(.*)/blaze-bin(.*)' ]]; then
+    cd "${match[1]}${match[2]}"
+  else
+    cd "${PWD/\/google3//google3/blaze-bin}"
+  fi
+}
+
+# Citc
+function tmux_title() {
+  if [[ $PWD =~ /google/src/cloud/[^/]+/([^/]+)/.* ]]; then
+    printf "\ek${match[1]}\e\\"
+  else
+    printf "\ek$(basename `pwd`)\e\\"
+  fi
+}
+if [[ ! -z "$TMUX" ]]; then
+  precmd_functions+=(tmux_title)
+fi
+
+# completion
+if [[ -f /etc/bash_completion.d/g4d ]]; then
+  . /etc/bash_completion.d/p4
+  . /etc/bash_completion.d/g4d
+fi
+if [ $commands[kubectl] ]; then
+	source <(kubectl completion zsh);
+fi
+
+export GOROOT="/usr/lib/google-golang"
+# export GOROOT="$HOME/workplace/go"
+# export PATH="$GOROOT/bin:$PATH"
+export PATH="/usr/local/google/home/zshihang/.local/bin:$PATH"
+export PATH="/usr/lib/cargo/bin:$PATH"
+
+# GKE
+export LOCAL_API=http://localhost:8788/
+export TEST_API=https://test-container.sandbox.googleapis.com/
+export STAGE_API=https://staging-container.sandbox.googleapis.com/
+export PROD_API=https://container.googleapis.com/
+export DEV_API=https://zshihang-gke-sandbox-test-container.sandbox.googleapis.com/
+
+
+export DEV_ID=zshihang-gke-dev
+export HOSTED_MASTER_PROJECT=gke-zshihang-hosted-master
+export CLUSTER_VERSION=1.13.2-gke.3
+export ADMIN_ENDPOINT="/bns/ir/borg/ir/bns/cloud-kubernetes-test/${USER}-gke-sandbox.clusteradmin.server"
+unset CLOUDSDK_API_ENDPOINT_OVERRIDES_CONTAINER
+
+alias mysandbox="google-chrome https://sandman.corp.google.com/i/zshihang-gke-sandbox"
+
+export PATH="$PATH:/usr/local/google/home/zshihang/workplace/dotnet"
+export PATH="/usr/local/google/home/zshihang/workplace/go/src/k8s.io/kubernetes/third_party/etcd:${PATH}"
+fh() {
+  print -z $( ([ -n "$ZSH_NAME" ] && fc -l 1 || history) | fzf +s --tac | sed 's/ *[0-9]* *//')
+}
+
+source ~/.blaze-colorizer.sh
+source /google/src/head/depot/google3/devtools/blaze/scripts/blaze-complete.bash
