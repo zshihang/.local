@@ -7,13 +7,10 @@ Glug blazedeps auto_filetypes=`['go']`
 Glug codefmt
 Glug codefmt gofmt_executable="goimports"
 Glug codefmt-google
-Glug corpweb plugin[mappings]
-Glug critique
-Glug csearch
-" Glug outline-window
 Glug relatedfiles plugin[mappings]='<leader>F'
 Glug glug sources+=`$HOME . '/.vim/.local'`
 Glug glint-ale
+Glug ultisnips-google
 
 " codefmt
 augroup autoformat_settings
@@ -31,18 +28,6 @@ augroup autoformat_settings
   autocmd FileType sql AutoFormatBuffer format_sql
 
 augroup END
-
-" critique
-nnoremap <leader>cl :CritiqueUnresolvedComments<CR>
-nnoremap <leader>clk :CritiquePreviousComment<CR>
-nnoremap <leader>clj :CritiqueNextComment<CR>
-
-" cssearch
-" nnoremap <leader>cc :Csearch <C-R><C-W><CR><CR>
-
-" outline-window
-" inoremap <F9> <esc>:GoogleOutlineWindow<cr>
-" nnoremap <F9> :GoogleOutlineWindow<cr>
 
 " @ale
 call ale#linter#Define('go', {
