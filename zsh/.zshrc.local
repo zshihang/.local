@@ -4,6 +4,7 @@ alias lab="ssh szhang96@ssh.cs.brown.edu -t tmux a"
 # alias deactivate="source deactivate"
 
 alias condabase="source $HOME/miniconda/bin/activate"
+alias python="python3"
 
 # go
 export GOPATH=$HOME/workplace/go
