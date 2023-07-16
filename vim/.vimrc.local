@@ -11,6 +11,7 @@ Glug relatedfiles plugin[mappings]='<leader>F'
 Glug glug sources+=`$HOME . '/.vim/.local'`
 Glug glint-ale
 Glug ultisnips-google
+Glug add_usings plugin[mappings]
 
 " codefmt
 augroup autoformat_settings
@@ -19,9 +20,11 @@ augroup autoformat_settings
   autocmd FileType c,cpp AutoFormatBuffer clang-format
   autocmd FileType go AutoFormatBuffer gofmt
   autocmd FileType java AutoFormatBuffer google-java-format
-  " autocmd FileType markdown AutoFormatBuffer mdformat
+  autocmd FileType markdown AutoFormatBuffer mdformat
   autocmd FileType ncl AutoFormatBuffer nclfmt
   autocmd FileType proto AutoFormatBuffer protofmt
+  autocmd BufRead,BufNewFile *.prod set filetype=python
+  autocmd BufRead,BufNewFile *.pi set filetype=python
   autocmd FileType python AutoFormatBuffer pyformat
   autocmd BufRead,BufNewFile *.bundle set filetype=textpb
   autocmd FileType textpb AutoFormatBuffer text-proto-format
@@ -98,3 +101,7 @@ if has_key(g:plugs, 'coc.nvim')
     \ }
     \})
 endif
+
+" go/include-fixer
+nnoremap <leader>cf :let g:clang_include_fixer_query_mode=0<cr>:py3f /usr/lib/clang-include-fixer/clang-include-fixer.py<cr>
+nnoremap <leader>qf :let g:clang_include_fixer_query_mode=1<cr>:py3f /usr/lib/clang-include-fixer/clang-include-fixer.py<cr>

@@ -1,59 +1,8 @@
 local context = import 'context.libsonnet';
-local lib = import 'gmailctl.libsonnet';
 
 {
-  skip:: {
-    or: [
-      {
-        and: [
-          {
-            or: [
-              $.yaqs,
-              $.gerrit,
-              $.cls,
-              $.issues,
-              $.gthanks,
-              $.sigAuth,
-            ],
-          },
-          $.toMe,
-        ],
-      },
-      $.sigAuth,
-    ],
-  },
-
-  important:: {
-    or: [
-      $.toReports,
-      { and: [$.fromManagers, $.directToMe] },
-      $.omg,
-    ],
-  },
-
-  zzz:: {
-    or: [
-      { and: [$.notToMe, { not: $.annoucements }, { not: $.gkeIdentity }, { not: $.sigAuth }, { not: $.toReports }] },
-      $.presubmits,
-    ],
-  },
-
-  toMe:: { to: context.email },
-
-  directToMe:: lib.directlyTo(context.email),
-
-  notToMe:: { not: $.toMe },
-
-  notDirectlyToMe:: { not: $.directToMe },
-
-  fromAnyOf(addresses):: { or: [{ from: x } for x in addresses] },
-
-  toAnyOf(addresses):: { or: [{ to: x } for x in addresses] },
-
   fromManagers:: $.fromAnyOf([
     'ksteuer@google.com',
-    'dazari@google.com',
-    'ankishah@google.com',
     'srimand@google.com',
     'azakonov@google.com',
     'tsavor@google.com',
@@ -92,7 +41,10 @@ local lib = import 'gmailctl.libsonnet';
   },
 
   gkeIdentity: {
-    list: 'gke-kubernetes-authnz google com',
+    or: [
+      { list: 'gke-kubernetes-authnz google com' },
+      { cc: 'gke-kubernetes-authnz google com' },
+    ],
   },
 
   annoucements: {
@@ -100,6 +52,8 @@ local lib = import 'gmailctl.libsonnet';
       { list: 'google@google.com' },
       { list: 'eng-announce@google.com' },
       { list: 'googlers-wa@google.com' },
+      { list: 'googlecloudorg@google.com' },
+      { list: 'everyone-sea-slu' },
     ],
   },
 
@@ -135,8 +89,21 @@ local lib = import 'gmailctl.libsonnet';
     list: 'kubernetes-sig-auth@googlegroups.com',
   },
 
+  grad: {
+    from: 'notifications-google@betterworks.com',
+  },
+
   yaqs: {
     from: 'yaqs-carrier-pigeon@google.com',
   },
 
+  totw: {
+    or: [
+      { list: 'cpp-tips@google.com' },
+    ],
+  },
+
+  tgif: {
+    subject: 'TGIF',
+  },
 }

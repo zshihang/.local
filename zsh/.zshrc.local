@@ -7,7 +7,7 @@
 stty -ixon
 stty ixany
 
-compdef tmx2=tmux
+# compdef tmx2=tmux
 
 function gcert() {
   if [[ -n $TMUX ]]; then
@@ -39,7 +39,6 @@ fi
 # ## ALIAS #
 #------------------------------------------------------------------------------
 
-alias vimconfiggoogle="vim ~/.vimrc.google"
 alias hgconfig="vim ~/.hgrc"
 alias admin_span='/google/data/ro/teams/axt-storage/admin_span/live/admin_span'
 if [ ! -z "${GOOGLE_DP_ADMIN_SESSION}" ]; then
@@ -56,6 +55,14 @@ alias mdformat=/google/data/ro/teams/g3doc/mdformat
 alias pastebin="/google/src/head/depot/eng/tools/pastebin"
 alias setup_gke_dev=cloud/kubernetes/engine/scripts/setup_gke_dev/setup_gke_dev.sh
 alias giraffe='/google/bin/releases/gke-giraffe/tools/prod/main'
+alias cclean='/google/src/head/depot/google3/devtools/maintenance/cclean/cclean'
+alias prodspec=/google/bin/releases/rollouts/prodspec/prodspec
+alias gke-testargs='/google/src/head/depot/google3/cloud/kubernetes/test/tools/testargs.sh'
+alias safergcp=/google/bin/releases/safer-gcp/tools/safergcp
+alias prodspec=/google/bin/releases/rollouts/prodspec/prodspec
+alias tm=/google/data/ro/teams/tenantmanager/tools/tm
+alias analog=/google/bin/releases/borg-logs-ui/analog-cli/analog
+
 
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
