@@ -54,6 +54,8 @@ local context = import 'context.libsonnet';
       { list: 'googlers-wa@google.com' },
       { list: 'googlecloudorg@google.com' },
       { list: 'everyone-sea-slu' },
+      { list: 'cr-pnw@google.com' },
+      { list: 'cloud-runtimes-org' },
     ],
   },
 

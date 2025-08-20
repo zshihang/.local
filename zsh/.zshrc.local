@@ -33,36 +33,42 @@ then
   add-zsh-hook preexec fixup_ssh_auth_sock
 fi
 
-
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
 # ## ALIAS #
 #------------------------------------------------------------------------------
 
-alias hgconfig="vim ~/.hgrc"
+alias gemini='/google/bin/releases/gemini-cli/tools/gemini'
+alias admin_session='/usr/bin/admin_session'
 alias admin_span='/google/data/ro/teams/axt-storage/admin_span/live/admin_span'
-if [ ! -z "${GOOGLE_DP_ADMIN_SESSION}" ]; then
-  . /google/src/head/depot/google3/cloud/kubernetes/engine/tools/proxy/proxy_aliases.sh
-fi
-alias tool-proxy='tool-proxy-cli --tool_proxy=blade:cloud-kubernetes-automation-tool-proxy-prod'
+alias analog=/google/bin/releases/borg-logs-ui/analog-cli/analog
+alias annealing=/google/bin/releases/rollouts/annealing/annealing
+alias capabilities="/google/data/ro/projects/borg-sre/capabilities"
+alias cclean='/google/src/head/depot/google3/devtools/maintenance/cclean/cclean'
+alias get_mint=/google/data/ro/projects/gaiamint/bin/get_mint
+alias giraffe=/google/bin/releases/gke-giraffe/tools/prod/main
+alias gke-testargs='/google/src/head/depot/google3/cloud/kubernetes/test/tools/testargs.sh'
+alias hgconfig="vim ~/.hgrc"
+alias mdformat=/google/data/ro/teams/g3doc/mdformat
+alias miracl_cli=/google/bin/releases/miracl-tools/miracl_cli/miracl_cli
+alias pastebin=/google/src/head/depot/eng/tools/pastebin
+alias pika="blaze run //cloud/kubernetes/distro/pika -- "
+alias prodspec=/google/bin/releases/rollouts/prodspec/prodspec
+alias prodspec=/google/bin/releases/rollouts/prodspec/prodspec
+alias proxy-admin_span='tool-proxy --tool=admin_span --'
 alias proxy-flex='tool-proxy --tool=flex --'
 alias proxy-monarch_tool='tool-proxy --tool=monarch_tool --'
 alias proxy-span='tool-proxy --tool=span --'
-alias proxy-admin_span='tool-proxy --tool=admin_span --'
-alias admin_session='/google/data/ro/projects/tonic/admin_session'
-alias get_mint="/google/data/ro/projects/gaiamint/bin/get_mint"
-alias mdformat=/google/data/ro/teams/g3doc/mdformat
-alias pastebin="/google/src/head/depot/eng/tools/pastebin"
-alias setup_gke_dev=cloud/kubernetes/engine/scripts/setup_gke_dev/setup_gke_dev.sh
-alias giraffe='/google/bin/releases/gke-giraffe/tools/prod/main'
-alias cclean='/google/src/head/depot/google3/devtools/maintenance/cclean/cclean'
-alias prodspec=/google/bin/releases/rollouts/prodspec/prodspec
-alias gke-testargs='/google/src/head/depot/google3/cloud/kubernetes/test/tools/testargs.sh'
 alias safergcp=/google/bin/releases/safer-gcp/tools/safergcp
-alias prodspec=/google/bin/releases/rollouts/prodspec/prodspec
+alias setup_gke_dev=cloud/kubernetes/engine/scripts/setup_gke_dev/setup_gke_dev.sh
+alias srp=/google/bin/releases/rollouts/srp/srp
 alias tm=/google/data/ro/teams/tenantmanager/tools/tm
-alias analog=/google/bin/releases/borg-logs-ui/analog-cli/analog
+alias tool-proxy='tool-proxy-cli --tool_proxy=blade:cloud-kubernetes-automation-tool-proxy-prod'
+alias t5y=/google/bin/releases/serviceprovisioning/tools/t5y
 
+if [ ! -z "${GOOGLE_DP_ADMIN_SESSION}" ]; then
+  . /google/src/head/depot/google3/cloud/kubernetes/engine/tools/proxy/proxy_aliases.sh
+fi
 
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
@@ -70,7 +76,6 @@ alias analog=/google/bin/releases/borg-logs-ui/analog-cli/analog
 #------------------------------------------------------------------------------
 
 # Go
-export GOROOT="/usr/lib/google-golang"
 
 # GKE
 export LOCAL_API=http://localhost:8788/
@@ -79,8 +84,12 @@ export STAGE_API=https://staging-container.sandbox.googleapis.com/
 export PROD_API=https://container.googleapis.com/
 export DEV_API=https://zshihang-gke-sandbox-test-container.sandbox.googleapis.com/
 
+export SANDBOX_NAME="zshihang-gke-sandbox"
+export SANDBOX_LOCATION="us-central1-c"
 export DEV_PROJECT=zshihang-gke-dev
+export GKE_DEV_PROJECT=zshihang-gke-dev
 export HOSTED_MASTER_PROJECT=gke-zshihang-hosted-master
+export GKE_HOSTED_MASTER_PROJECT=gke-zshihang-hosted-master
 
 # PATH
 export PATH="/usr/local/google/home/zshihang/.local/bin:$PATH"
@@ -108,11 +117,6 @@ if [[ -f /etc/bash_completion.d/hgd ]]; then
   source /etc/bash_completion.d/hgd
 fi
 
-# kubectl
-if [ $commands[kubectl] ]; then
-  source <(kubectl completion zsh);
-fi
-
 # blaze
 if [ -d /google/data ]; then
   fpath=(/google/src/files/head/depot/google3/devtools/blaze/scripts/zsh_completion $fpath)
@@ -124,7 +128,7 @@ fi
 #------------------------------------------------------------------------------
 
 # blaze
-source ~/.blaze-colorizer.sh
+# source ~/.blaze-colorizer.sh
 
 
 #------------------------------------------------------------------------------
@@ -151,3 +155,10 @@ function tmux_title() {
 if [[ ! -z "$TMUX" ]]; then
   precmd_functions+=(tmux_title)
 fi
+
+#------------------------------------------------------------------------------
+#------------------------------------------------------------------------------
+# ## FZF #
+#------------------------------------------------------------------------------
+
+export FZF_DEFAULT_COMMAND="fd --type f --hidden --follow --exclude .git . \'$SEARCH_REL_PATH\'"
