@@ -4,9 +4,9 @@ set-option -g allow-rename on
 set -ga status-left "#[fg=colour233,bg=colour137]#(echo \" $(gcertstatus --nocheck_ssh --format=statusbar) \")"
 set -ga status-left '#{?client_prefix,#[bg=red]^A#[default],  } '
 
-# sessionizer: separate shallow (local) and deep (cloud) search paths
+# sessionizer: separate shallow (local) and smart (cloud) search paths
 set -g @sessionizer-dirs "~/workspace ~/workspace/google"
 set -g @sessionizer-dirs-deep "/google/src/cloud/$USER"
 
-# Strict Noise Filter: Hide ALL common CitC boilerplate and ephemeral exports
-set -g @sessionizer-fd-flags "--exclude jj-export-* --exclude fig-export-* --exclude hg-export-* --exclude configs --exclude eng --exclude ops --exclude developer_support --exclude googledata --exclude sysimages --exclude branches --exclude company --exclude hosting --exclude sandbox --exclude services --exclude vendor_src --exclude googleclient --exclude googlemac --exclude depot* --exclude OWNERS* --exclude METADATA --exclude finance --exclude google_vendor_src_branch --exclude linuxclient --exclude sales --exclude opensource --exclude clientops --exclude googlemobile --exclude devtools"
+# Filter root-level patterns we want to ignore entirely
+set -g @sessionizer-fd-flags "--exclude jj-export-* --exclude fig-export-* --exclude hg-export-*"
