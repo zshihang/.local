@@ -8,5 +8,5 @@ set -ga status-left '#{?client_prefix,#[bg=red]^A#[default],  } '
 set -g @sessionizer-dirs "~/workspace ~/workspace/google"
 set -g @sessionizer-dirs-deep "/google/src/cloud/$USER"
 
-# Filter root-level patterns we want to ignore entirely
-set -g @sessionizer-fd-flags "--exclude jj-export-* --exclude fig-export-* --exclude hg-export-*"
+# Pattern exclusions applied to BOTH workspace discovery and subproject search
+set -g @sessionizer-fd-flags "--exclude jj-export-* --exclude fig-export-* --exclude hg-export-* --exclude .git --exclude .jj"
