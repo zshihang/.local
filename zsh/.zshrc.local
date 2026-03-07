@@ -30,7 +30,7 @@ export PATH="/usr/lib/cargo/bin:$PATH"
 
 # Custom Blaze Binary jumper
 function bb() {
-  if [[ $PWD =~ '(.*)/blaze-bin(.*)' ]]; then
+  if [[ $PWD =~ (.*)/blaze-bin(.*) ]]; then
     cd "${match[1]}${match[2]}"
   else
     cd "${PWD/\/google3//google3/blaze-bin}"
