@@ -6,12 +6,4 @@ set -ga status-left '#{?client_prefix,#[bg=red]^A#[default],  } '
 
 # sessionizer: google-specific paths and exclusion rules
 set -g @sessionizer-dirs "~/workspace ~/workspace/google /google/src/cloud/$USER"
-
-bind-key f run-shell "#{@sessionizer-cleanup}" \; display-popup -w 60% -h 60% -E "\
-  dir=\$(fd --type d --max-depth 2 --exclude google3 . \$(tmux show -gv @sessionizer-dirs) 2>/dev/null | fzf --reverse --header 'Pick a project') && \
-  [[ -z \"\$dir\" ]] && exit; \
-  name=\$(basename \$dir | tr . _) && \
-  if ! tmux has-session -t=\"\$name\" 2>/dev/null; then \
-    tmux new-session -d -s \"\$name\" -c \"\$dir\"; \
-  fi && \
-  tmux switch-client -t \"\$name\""
+set -g @sessionizer-fd-flags "--max-depth 2 --exclude google3"
