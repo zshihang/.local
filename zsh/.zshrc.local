@@ -1,43 +1,8 @@
 #------------------------------------------------------------------------------
-#------------------------------------------------------------------------------
-# ## PAINS #
-#------------------------------------------------------------------------------
-
-# stop frozen vim
-stty -ixon
-stty ixany
-
-# compdef tmx2=tmux
-
-function gcert() {
-  if [[ -n $TMUX ]]; then
-    eval $(tmux show-environment -s)
-  fi
-
-  command gcert "$@"
-}
-
-fixup_ssh_auth_sock() {
-  if [[ -n ${SSH_AUTH_SOCK} && ! -e ${SSH_AUTH_SOCK} ]]
-  then
-    local new_sock=$(echo /tmp/ssh-*/agent.*(=UNom[1]))
-     if [[ -n ${new_sock} ]]
-     then
-       export SSH_AUTH_SOCK=${new_sock}
-     fi
-  fi
-}
-if [[ -n ${SSH_AUTH_SOCK} ]]
-then
-  autoload -U add-zsh-hook
-  add-zsh-hook preexec fixup_ssh_auth_sock
-fi
-
-#------------------------------------------------------------------------------
-#------------------------------------------------------------------------------
-# ## ALIAS #
+# ## GOOGLE-SPECIFIC CONFIG #
 #------------------------------------------------------------------------------
 
+# Aliases
 alias k9s=/google/data/ro/teams/giza/projects/devtools/k9s
 alias gemini='/google/bin/releases/gemini-cli/tools/gemini --gfg'
 alias admin_session='/usr/bin/admin_session'
@@ -47,99 +12,23 @@ alias annealing=/google/bin/releases/rollouts/annealing/annealing
 alias capabilities="/google/data/ro/projects/borg-sre/capabilities"
 alias cclean='/google/src/head/depot/google3/devtools/maintenance/cclean/cclean'
 alias get_mint=/google/data/ro/projects/gaiamint/bin/get_mint
-alias giraffe=/google/bin/releases/gke-giraffe/tools/prod/main
-alias gke-testargs='/google/src/head/depot/google3/cloud/kubernetes/test/tools/testargs.sh'
-alias hgconfig="vim ~/.hgrc"
-alias hg="chg"
 alias mdformat=/google/data/ro/teams/g3doc/mdformat
 alias miracl_cli=/google/bin/releases/miracl-tools/miracl_cli/miracl_cli
-alias pastebin=/google/src/head/depot/eng/tools/pastebin
-alias pika="blaze run //cloud/kubernetes/distro/pika -- "
-alias prodspec=/google/bin/releases/rollouts/prodspec/prodspec
-alias proxy-admin_span='tool-proxy --tool=admin_span --'
-alias proxy-flex='tool-proxy --tool=flex --'
-alias proxy-monarch_tool='tool-proxy --tool=monarch_tool --'
-alias proxy-span='tool-proxy --tool=span --'
-alias safergcp=/google/bin/releases/safer-gcp/tools/safergcp
-alias setup_gke_dev=cloud/kubernetes/engine/scripts/setup_gke_dev/setup_gke_dev.sh
-alias srp=/google/bin/releases/rollouts/srp/srp
-alias tm=/google/data/ro/teams/tenantmanager/tools/tm
-alias tool-proxy='tool-proxy-cli --tool_proxy=blade:cloud-kubernetes-automation-tool-proxy-prod'
-alias t5y=/google/bin/releases/serviceprovisioning/tools/t5y
 alias gbazelisk=/google/bin/releases/bazel-infra/bazelisk/gbazelisk
+alias hgconfig="vim ~/.hgrc"
+alias hg="chg"
 
-if [ ! -z "${GOOGLE_DP_ADMIN_SESSION}" ]; then
-  . /google/src/head/depot/google3/cloud/kubernetes/engine/tools/proxy/proxy_aliases.sh
-fi
-
-#------------------------------------------------------------------------------
-#------------------------------------------------------------------------------
-# ## ENVVARS #
-#------------------------------------------------------------------------------
-
-# Go
-
-# GKE
-export LOCAL_API=http://localhost:8788/
-export TEST_API=https://test-container.sandbox.googleapis.com/
-export STAGE_API=https://staging-container.sandbox.googleapis.com/
-export PROD_API=https://container.googleapis.com/
-export DEV_API=https://zshihang-gke-sandbox-test-container.sandbox.googleapis.com/
-
+# Infrastructure & Projects
 export SANDBOX_NAME="zshihang-gke-sandbox"
 export SANDBOX_LOCATION="us-central1-c"
 export DEV_PROJECT=zshihang-gke-dev
 export GKE_DEV_PROJECT=zshihang-gke-dev
-export HOSTED_MASTER_PROJECT=gke-zshihang-hosted-master
-export GKE_HOSTED_MASTER_PROJECT=gke-zshihang-hosted-master
 
-# PATH
+# Path (Machine specific additions)
 export PATH="/usr/local/google/home/zshihang/.local/bin:$PATH"
 export PATH="/usr/lib/cargo/bin:$PATH"
-export PATH="$PATH:/usr/local/google/home/zshihang/workplace/dotnet"
-export PATH="/usr/local/google/home/zshihang/workplace/go/src/k8s.io/kubernetes/third_party/etcd:${PATH}"
 
-#------------------------------------------------------------------------------
-#------------------------------------------------------------------------------
-# ## COMPLETIONS #
-#------------------------------------------------------------------------------
-
-zstyle ':completion::complete:*' use-cache 1
-zstyle ':completion::complete:*' cache-path ~/.zsh/cache
-zstyle ':completion:*' users root $USER #fix lag in google3
-
-source /etc/bash_completion.d/jjd
-
-# p4
-if [[ -f /etc/bash_completion.d/g4d ]]; then
-  . /etc/bash_completion.d/p4
-  . /etc/bash_completion.d/g4d
-fi
-
-# fig
-if [[ -f /etc/bash_completion.d/hgd ]]; then
-  source /etc/bash_completion.d/hgd
-fi
-
-# blaze
-if [ -d /google/data ]; then
-  fpath=(/google/src/files/head/depot/google3/devtools/blaze/scripts/zsh_completion $fpath)
-fi
-
-#------------------------------------------------------------------------------
-#------------------------------------------------------------------------------
-# ## HIGHLIGHT #
-#------------------------------------------------------------------------------
-
-# blaze
-# source ~/.blaze-colorizer.sh
-
-
-#------------------------------------------------------------------------------
-#------------------------------------------------------------------------------
-# ## FUNCTIONS #
-#------------------------------------------------------------------------------
-
+# Custom Blaze Binary jumper
 function bb() {
   if [[ $PWD =~ '(.*)/blaze-bin(.*)' ]]; then
     cd "${match[1]}${match[2]}"
@@ -148,25 +37,12 @@ function bb() {
   fi
 }
 
-# piper
-function tmux_title() {
-  if [[ $PWD =~ /google/src/cloud/[^/]+/([^/]+)/.* ]]; then
-    printf "\ek${match[1]}\e\\"
-  else
-    printf "\ek$(basename `pwd`)\e\\"
-  fi
-}
-if [[ ! -z "$TMUX" ]]; then
-  precmd_functions+=(tmux_title)
+# Google3 Bash completions
+source /etc/bash_completion.d/jjd 2>/dev/null
+[[ -f /etc/bash_completion.d/p4 ]] && . /etc/bash_completion.d/p4
+[[ -f /etc/bash_completion.d/g4d ]] && . /etc/bash_completion.d/g4d
+[[ -f /etc/bash_completion.d/hgd ]] && . /etc/bash_completion.d/hgd
+
+if [ -d /google/data ]; then
+  fpath=(/google/src/files/head/depot/google3/devtools/blaze/scripts/zsh_completion $fpath)
 fi
-
-#------------------------------------------------------------------------------
-#------------------------------------------------------------------------------
-# ## FZF #
-#------------------------------------------------------------------------------
-
-export FZF_DEFAULT_COMMAND="fd --type f --hidden --follow --exclude .git . \'$SEARCH_REL_PATH\'"
-
-# For "workon"
-export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
-source /usr/share/virtualenvwrapper/virtualenvwrapper.sh
