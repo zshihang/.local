@@ -4,24 +4,10 @@ set-option -g allow-rename on
 set -ga status-left "#[fg=colour233,bg=colour137]#(echo \" $(gcertstatus --nocheck_ssh --format=statusbar) \")"
 set -ga status-left '#{?client_prefix,#[bg=red]^A#[default],  } '
 
-# sessionizer: google-specific configuration
+# sessionizer: google-specific paths and exclusion rules
 set -g @sessionizer-dirs "$HOME/workspace $HOME/workspace/google"
 set -g @sessionizer-dirs-deep "/google/src/cloud/$USER"
 set -g @sessionizer-fd-flags "--exclude jj-export-* --exclude fig-export-* --exclude hg-export-* --exclude .git --exclude .jj"
 
-# Use the discovery script for a cleaner, flicker-free experience
-bind-key f run-shell "#{@sessionizer-cleanup}" \; display-popup -w 60% -h 60% -E "\
-  dir=\$(~/workspace/dotfiles/.local/tmux/sessionizer.sh | awk '!x[\$0]++' | fzf --no-sort --reverse --header 'Pick a project') && \
-  [[ -z \"\$dir\" ]] && exit; \
-  echo \"\$dir\" >> \"\$(tmux show -gv @sessionizer-history)\"; \
-  base=\$(basename \"\$dir\") && \
-  if [[ \"\$base\" == \"google3\" ]]; then \
-    name=\$(basename \$(dirname \"\$dir\")); \
-  else \
-    name=\$base; \
-  fi; \
-  name=\$(echo \"\$name\" | tr . _); \
-  if ! tmux has-session -t=\"\$name\" 2>/dev/null; then \
-    tmux new-session -d -s \"\$name\" -c \"\$dir\"; \
-  fi && \
-  tmux switch-client -t \"\$name\""
+# Override the list command to use our Google-aware discovery provider
+set -g @sessionizer-list-cmd "$HOME/workspace/dotfiles/.local/tmux/discovery.sh"
