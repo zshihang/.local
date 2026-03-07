@@ -1,1 +1,4 @@
 export host=ckg.c.googlers.com
+
+# quick work ssh
+alias swork='ssh ckg -t -- /usr/bin/zsh -lic "gcertstatus -nocheck_ssh -check_remaining=1h || gcert; tmx2 new -A"'
