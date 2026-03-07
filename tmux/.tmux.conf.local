@@ -8,5 +8,5 @@ set -ga status-left '#{?client_prefix,#[bg=red]^A#[default],  } '
 set -g @sessionizer-dirs "~/workspace ~/workspace/google"
 set -g @sessionizer-dirs-deep "/google/src/cloud/$USER"
 
-# Filter specifically for google3 in CitC, or top-level project folders in local/Cog repos.
-set -g @sessionizer-fd-flags "--exclude jj-export-* --exclude fig-export-* --exclude hg-export-* --exclude configs --exclude eng --exclude ops --exclude developer_support --exclude googledata --exclude sysimages --exclude branches --exclude company --exclude hosting --exclude sandbox --exclude services --exclude vendor_src --exclude googleclient --exclude googlemac --exclude depot* --exclude OWNERS* --exclude METADATA"
+# Strict Noise Filter: Hide ALL common CitC boilerplate and ephemeral exports
+set -g @sessionizer-fd-flags "--exclude jj-export-* --exclude fig-export-* --exclude hg-export-* --exclude configs --exclude eng --exclude ops --exclude developer_support --exclude googledata --exclude sysimages --exclude branches --exclude company --exclude hosting --exclude sandbox --exclude services --exclude vendor_src --exclude googleclient --exclude googlemac --exclude depot* --exclude OWNERS* --exclude METADATA --exclude finance --exclude google_vendor_src_branch --exclude linuxclient --exclude sales --exclude opensource --exclude clientops --exclude googlemobile --exclude devtools"
