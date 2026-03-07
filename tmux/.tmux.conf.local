@@ -6,4 +6,5 @@ set -ga status-left '#{?client_prefix,#[bg=red]^A#[default],  } '
 
 # sessionizer: google-specific paths and exclusion rules
 set -g @sessionizer-dirs "~/workspace ~/workspace/google /google/src/cloud/$USER"
-set -g @sessionizer-fd-flags "--max-depth 2 --exclude google3"
+# Refined Noise Filter: Exclude export workspaces and CitC boilerplate folders
+set -g @sessionizer-fd-flags "--max-depth 2 --exclude google3 --exclude jj-export-* --exclude fig-export-* --exclude configs --exclude eng --exclude ops --exclude developer_support --exclude googledata --exclude sysimages --exclude hg-export-*"
