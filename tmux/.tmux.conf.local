@@ -3,3 +3,13 @@ set-option -g allow-rename on
 # set -ga status-left "#[fg=colour233,bg=colour137]#(gcertstatus --nocheck_ssh --check_remaining=10h --quiet || echo \" $(gcertstatus --nocheck_ssh --format=statusbar) \")"
 set -ga status-left "#[fg=colour233,bg=colour137]#(echo \" $(gcertstatus --nocheck_ssh --format=statusbar) \")"
 set -ga status-left '#{?client_prefix,#[bg=red]^A#[default],  } '
+
+# sessionizer: fuzzy-find project dir, include CitC paths
+bind-key f display-popup -w 60% -h 60% -E "\
+  dir=\$(fd --type d --max-depth 1 . ~/workspace /google/src/cloud/\$USER 2>/dev/null | fzf --reverse --header 'Pick a project') && \
+  [[ -z \"\$dir\" ]] && exit; \
+  name=\$(basename \$dir | tr . _) && \
+  if ! tmux has-session -t=\"\$name\" 2>/dev/null; then \
+    tmux new-session -d -s \"\$name\" -c \"\$dir\"; \
+  fi && \
+  tmux switch-client -t \"\$name\""
