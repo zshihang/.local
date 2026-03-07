@@ -4,8 +4,9 @@ set-option -g allow-rename on
 set -ga status-left "#[fg=colour233,bg=colour137]#(echo \" $(gcertstatus --nocheck_ssh --format=statusbar) \")"
 set -ga status-left '#{?client_prefix,#[bg=red]^A#[default],  } '
 
-# sessionizer: google-specific paths and exclusion rules
-set -g @sessionizer-dirs "~/workspace ~/workspace/google /google/src/cloud/$USER"
+# sessionizer: separate shallow (local) and deep (cloud) search paths
+set -g @sessionizer-dirs "~/workspace ~/workspace/google"
+set -g @sessionizer-dirs-deep "/google/src/cloud/$USER"
+
 # Filter specifically for google3 in CitC, or top-level project folders in local/Cog repos.
-# This excludes all the CitC boilerplate noise (eng, configs, sandbox, etc.)
-set -g @sessionizer-fd-flags "--max-depth 2 --exclude jj-export-* --exclude fig-export-* --exclude hg-export-* --exclude configs --exclude eng --exclude ops --exclude developer_support --exclude googledata --exclude sysimages --exclude branches --exclude company --exclude hosting --exclude sandbox --exclude services --exclude vendor_src --exclude googleclient --exclude googlemac --exclude depot* --exclude OWNERS* --exclude METADATA"
+set -g @sessionizer-fd-flags "--exclude jj-export-* --exclude fig-export-* --exclude hg-export-* --exclude configs --exclude eng --exclude ops --exclude developer_support --exclude googledata --exclude sysimages --exclude branches --exclude company --exclude hosting --exclude sandbox --exclude services --exclude vendor_src --exclude googleclient --exclude googlemac --exclude depot* --exclude OWNERS* --exclude METADATA"
