@@ -1,0 +1,14 @@
+[user]
+name = "Shihang Zhang"
+email = "zshihang@google.com"
+
+[git]
+# Pushes to Gerrit magic ref
+push-bookmark-prefix = "refs/for/"
+
+[templates]
+# Automatic Gerrit Change-Id
+commit_description = "description ++ \"\n\nChange-Id: I\" ++ change_id.hex()"
+
+[aliases]
+gp = ["git", "push", "--remote", "origin"]
