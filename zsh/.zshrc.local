@@ -72,8 +72,6 @@ if [ ! -z "${GOOGLE_DP_ADMIN_SESSION}" ]; then
   . /google/src/head/depot/google3/cloud/kubernetes/engine/tools/proxy/proxy_aliases.sh
 fi
 
-export host=ckg.c.googlers.com
-
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
 # ## ENVVARS #
