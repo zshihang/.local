@@ -64,13 +64,15 @@ alias safergcp=/google/bin/releases/safer-gcp/tools/safergcp
 alias setup_gke_dev=cloud/kubernetes/engine/scripts/setup_gke_dev/setup_gke_dev.sh
 alias srp=/google/bin/releases/rollouts/srp/srp
 alias tm=/google/data/ro/teams/tenantmanager/tools/tm
-alias tool-proxy='tool-proxy-cli --tool_proxy=blade:cloud-kubernetes-automation-tool-proxy-prod'
+alias tool-proxy='tool-proxy-cli --tool_proxy=blade:cloud-kubernetes-kubernetes-automation-tool-proxy-prod'
 alias t5y=/google/bin/releases/serviceprovisioning/tools/t5y
 alias gbazelisk=/google/bin/releases/bazel-infra/bazelisk/gbazelisk
 
 if [ ! -z "${GOOGLE_DP_ADMIN_SESSION}" ]; then
   . /google/src/head/depot/google3/cloud/kubernetes/engine/tools/proxy/proxy_aliases.sh
 fi
+
+export host=ckg.c.googlers.com
 
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
