@@ -4,10 +4,10 @@ set-option -g allow-rename on
 set -ga status-left "#[fg=colour233,bg=colour137]#(echo \" $(gcertstatus --nocheck_ssh --format=statusbar) \")"
 set -ga status-left '#{?client_prefix,#[bg=red]^A#[default],  } '
 
-# sessionizer: google-specific paths and exclusion rules
+# sessionizer: google-specific configuration
 set -g @sessionizer-dirs "$HOME/workspace $HOME/workspace/google"
 set -g @sessionizer-dirs-deep "/google/src/cloud/$USER"
 set -g @sessionizer-fd-flags "--exclude jj-export-* --exclude fig-export-* --exclude hg-export-* --exclude .git --exclude .jj"
 
-# Override the list command to use our Google-aware discovery provider
-set -g @sessionizer-list-cmd "$HOME/workspace/dotfiles/.local/tmux/discovery.sh"
+# Hook the Google cloud discovery loop into the engine
+set -g @sessionizer-deep-provider "$HOME/workspace/dotfiles/.local/tmux/discovery.sh"
