@@ -98,7 +98,6 @@ export PATH="/usr/local/google/home/zshihang/.local/bin:$PATH"
 export PATH="/usr/lib/cargo/bin:$PATH"
 export PATH="$PATH:/usr/local/google/home/zshihang/workplace/dotnet"
 export PATH="/usr/local/google/home/zshihang/workplace/go/src/k8s.io/kubernetes/third_party/etcd:${PATH}"
-alias kubectl-ai='GEMINI_API_KEY=$(cat ~/.gemini_api_key) kubectl-ai'
 
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
