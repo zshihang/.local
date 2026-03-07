@@ -38,7 +38,8 @@ fi
 # ## ALIAS #
 #------------------------------------------------------------------------------
 
-alias gemini='/google/bin/releases/gemini-cli/tools/gemini'
+alias k9s=/google/data/ro/teams/giza/projects/devtools/k9s
+alias gemini='/google/bin/releases/gemini-cli/tools/gemini --gfg'
 alias admin_session='/usr/bin/admin_session'
 alias admin_span='/google/data/ro/teams/axt-storage/admin_span/live/admin_span'
 alias analog=/google/bin/releases/borg-logs-ui/analog-cli/analog
@@ -49,11 +50,11 @@ alias get_mint=/google/data/ro/projects/gaiamint/bin/get_mint
 alias giraffe=/google/bin/releases/gke-giraffe/tools/prod/main
 alias gke-testargs='/google/src/head/depot/google3/cloud/kubernetes/test/tools/testargs.sh'
 alias hgconfig="vim ~/.hgrc"
+alias hg="chg"
 alias mdformat=/google/data/ro/teams/g3doc/mdformat
 alias miracl_cli=/google/bin/releases/miracl-tools/miracl_cli/miracl_cli
 alias pastebin=/google/src/head/depot/eng/tools/pastebin
 alias pika="blaze run //cloud/kubernetes/distro/pika -- "
-alias prodspec=/google/bin/releases/rollouts/prodspec/prodspec
 alias prodspec=/google/bin/releases/rollouts/prodspec/prodspec
 alias proxy-admin_span='tool-proxy --tool=admin_span --'
 alias proxy-flex='tool-proxy --tool=flex --'
@@ -65,6 +66,7 @@ alias srp=/google/bin/releases/rollouts/srp/srp
 alias tm=/google/data/ro/teams/tenantmanager/tools/tm
 alias tool-proxy='tool-proxy-cli --tool_proxy=blade:cloud-kubernetes-automation-tool-proxy-prod'
 alias t5y=/google/bin/releases/serviceprovisioning/tools/t5y
+alias gbazelisk=/google/bin/releases/bazel-infra/bazelisk/gbazelisk
 
 if [ ! -z "${GOOGLE_DP_ADMIN_SESSION}" ]; then
   . /google/src/head/depot/google3/cloud/kubernetes/engine/tools/proxy/proxy_aliases.sh
@@ -96,6 +98,7 @@ export PATH="/usr/local/google/home/zshihang/.local/bin:$PATH"
 export PATH="/usr/lib/cargo/bin:$PATH"
 export PATH="$PATH:/usr/local/google/home/zshihang/workplace/dotnet"
 export PATH="/usr/local/google/home/zshihang/workplace/go/src/k8s.io/kubernetes/third_party/etcd:${PATH}"
+alias kubectl-ai='GEMINI_API_KEY=$(cat ~/.gemini_api_key) kubectl-ai'
 
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
@@ -105,6 +108,8 @@ export PATH="/usr/local/google/home/zshihang/workplace/go/src/k8s.io/kubernetes/
 zstyle ':completion::complete:*' use-cache 1
 zstyle ':completion::complete:*' cache-path ~/.zsh/cache
 zstyle ':completion:*' users root $USER #fix lag in google3
+
+source /etc/bash_completion.d/jjd
 
 # p4
 if [[ -f /etc/bash_completion.d/g4d ]]; then
@@ -162,3 +167,7 @@ fi
 #------------------------------------------------------------------------------
 
 export FZF_DEFAULT_COMMAND="fd --type f --hidden --follow --exclude .git . \'$SEARCH_REL_PATH\'"
+
+# For "workon"
+export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
+source /usr/share/virtualenvwrapper/virtualenvwrapper.sh

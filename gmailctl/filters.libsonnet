@@ -1,22 +1,13 @@
+local helpers = import '../helpers.libsonnet';
 local context = import 'context.libsonnet';
 
 {
-  fromManagers:: $.fromAnyOf([
-    'ksteuer@google.com',
-    'srimand@google.com',
-    'azakonov@google.com',
-    'tsavor@google.com',
-    'cgoldberg@google.com',
-  ]),
-
-  toReports:: $.toAnyOf([
-    'ksteuer-reports@google.com',
-    'srimand-reports@google.com',
-    'azakonov-all@google.com',
-    'tsavor-all@google.com',
-    'cgoldberg-all@google.com',
-    'urs-team@google.com',
-    'bcalder-team-extended@google.com',
+  fromManagers:: helpers.fromAnyOf([
+    'wcourtney@google.com',
+    'dstrain@google.com',
+    'dabacon@google.com',
+    'boixo@google.com',
+    'neven@google.com',
   ]),
 
   balglobal: {
@@ -27,23 +18,26 @@ local context = import 'context.libsonnet';
     cc: 'reviewlog@google.com',
   },
 
-
   ganpati: { from: 'ganpati-noreply@google.com' },
+
+  tap: { from: 'noreply-tap-eng@google.com' },
+
+  noice: {
+    or: [
+      { from: 'nobody@google.com' },
+      { from: 'mdb.cloud-console-test+noreply@google.com' },
+      { to: 'quantum-cloud-auto@google.com' },
+    ],
+  },
 
   gerrit: {
     or: [
       { cc: 'noreply+kokoro@google.com' },
       { from: 'noreply+kokoro@google.com' },
       { from: '(Gerrit)' },
-      { list: 'gerrit-gke-security.louhi-config-internal-review.googlesource.com' },
-      { list: 'gerrit-gke-identity-zatar.gke-internal-review.googlesource.com' },
-    ],
-  },
-
-  gkeIdentity: {
-    or: [
-      { list: 'gke-kubernetes-authnz google com' },
-      { cc: 'gke-kubernetes-authnz google com' },
+      { subject: '(borq-config[main])' },
+      { list: 'gerrit-qswim.quantum-review.git.corp.google.com' },
+      { subject: 'pyle3[main]' },
     ],
   },
 
@@ -52,10 +46,14 @@ local context = import 'context.libsonnet';
       { list: 'google@google.com' },
       { list: 'eng-announce@google.com' },
       { list: 'googlers-wa@google.com' },
-      { list: 'googlecloudorg@google.com' },
       { list: 'everyone-sea-slu' },
-      { list: 'cr-pnw@google.com' },
-      { list: 'cloud-runtimes-org' },
+      { list: 'quantum-quacs@google.com' },
+      { list: 'quacs@google.com' },
+      { list: 'borq-team@google.com' },
+      { list: 'research-sea-fun@google.com' },
+      { list: 'quantum-swe@google.com' },
+      { list: 'quantum-hardware@google.com' },
+      { list: 'quantum-software@google.com' },
     ],
   },
 
@@ -79,16 +77,37 @@ local context = import 'context.libsonnet';
   omg: {
     or: [
       { list: 'major-incidents.google.com' },
-      { to: 'gke-security-incidents@google.com' },
     ],
   },
 
-  presubmits: {
-    from: 'mdb.cloud-kubernetes-guitar-presubmit-jobs@google.com',
+  // presubmits: {
+  //   from: 'mdb.cloud-kubernetes-guitar-presubmit-jobs@google.com',
+  // },
+
+  // skip inbox
+  skipList: {
+    or: [
+      $.cls,
+      $.issues,
+      $.gthanks,
+      $.yaqs,
+      $.gerrit,
+      $.tap,
+      $.noice,
+      $.dogfood,
+    ],
   },
 
-  sigAuth: {
-    list: 'kubernetes-sig-auth@googlegroups.com',
+  k8s: {
+    or: [
+      { list: 'kubernetes-sig-auth@googlegroups.com' }
+      { list: 'sig-storage@googlegroups.com' },
+      { list: 'dev@kubernetes.io' },
+    ],
+  },
+
+  dogfood: {
+    list: 'dogfood-announce@google.com',
   },
 
   grad: {

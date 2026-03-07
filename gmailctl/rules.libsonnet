@@ -1,5 +1,6 @@
 local actions = import '../actions.libsonnet';
 local lib = import '../gmailctl.libsonnet';
+local helpers = import '../helpers.libsonnet';
 local filters = import 'filters.libsonnet';
 
 {
@@ -54,30 +55,36 @@ local filters = import 'filters.libsonnet';
       },
     },
     actions.skip {
-      name:: 'sig-auth',
-      filter: filters.sigAuth,
+      name:: 'k8s',
+      filter: filters.k8s,
       actions+: {
-        labels: ['sig-auth'],
+        labels: ['k8s'],
+      },
+    },
+    actions.skip {
+      name:: 'dogfood',
+      filter: filters.dogfood,
+      actions+: {
+        labels: ['k8s'],
       },
     },
   ] + lib.chainFilters([
-    actions.ignore {
-      // if emails are spam, they should be ignored.
-      name:: 'SPAM',
-      filter: { or: [
-        filters.presubmits,
-      ] },
-    },
+    // actions.ignore {
+    //   // if emails are spam, they should be ignored.
+    //   name:: 'SPAM',
+    //   filter: { or: [
+    //     // filters.presubmits,
+    //   ] },
+    // },
     // else if emails are important which may or may not addressed to me, they
     // should be marked as important.
     actions.important {
       name:: 'NOW',
       filter: { or: [
         // emails addressed to me.
-        { and: [filters.fromManagers, filters.directToMe] },
+        { and: [filters.fromManagers, helpers.directToMe] },
         // emails not addressed to me but are important
-        filters.toReports,
-        { and: [filters.annoucements, { not: filters.tgif }] },
+        { and: [filters.annoucements, { not: filters.tgif }, { not: filters.skipList }] },
         filters.omg,
       ] },
     },
@@ -85,7 +92,6 @@ local filters = import 'filters.libsonnet';
       name:: 'TODO',
       filter: { or: [
         filters.totw,
-        filters.sigAuth,
         filters.grad,
         filters.tgif,
       ] },
@@ -96,10 +102,13 @@ local filters = import 'filters.libsonnet';
     //   filters: filters.toMe,
     //   labels: ['LATER'],
     // },
-    // else if emails not addressed to me, they should be ignored.
+    // else if labeled emails not addressed to me, they should be ignored.
     actions.ignore {
       name:: 'IGNORE',
-      filter: filters.notToMe,
+      filter: { and: [
+        helpers.notToMe,
+        filters.skipList,
+      ] },
     },
   ]),
   tests: [
@@ -107,19 +116,8 @@ local filters = import 'filters.libsonnet';
       name: 'manager directly to me',
       messages: [
         {
-          from: 'ksteuer@google.com',
+          from: 'wcourtney@google.com',
           to: ['zshihang@google.com'],
-        },
-      ],
-      actions: {
-        markImportant: true,
-      },
-    },
-    {
-      name: 'manager to reports',
-      messages: [
-        {
-          to: ['ksteuer-reports@google.com'],
         },
       ],
       actions: {
@@ -151,6 +149,20 @@ local filters = import 'filters.libsonnet';
         archive: true,
         markImportant: false,
         star: true,
+      },
+    },
+    {
+      name: 'quacs',
+      messages: [
+        {
+          lists: ['quacs@google.com'],
+          from: 'nobody@google.com',
+        },
+      ],
+      actions: {
+        archive: true,
+        markRead: true,
+        markImportant: false,
       },
     },
   ],
