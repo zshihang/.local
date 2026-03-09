@@ -29,7 +29,8 @@ export PATH="/usr/local/google/home/zshihang/.local/bin:$PATH"
 export PATH="/usr/lib/cargo/bin:$PATH"
 
 # Custom Blaze Binary jumper
-function bb() {
+# Usage: bcj (Blaze Code Jump)
+function bcj() {
   if [[ $PWD =~ (.*)/blaze-bin(.*) ]]; then
     cd "${match[1]}${match[2]}"
   else
@@ -50,7 +51,3 @@ fi
 # Search toolkit
 b() { (xdg-open "https://b.corp.google.com/${1:-}" &> /dev/null &) }
 cs() { (xdg-open "https://cs.corp.google.com/search?q=$*" &> /dev/null &) }
-
-# Bazel helpers
-bt() { local t; t=$(bazel query 'kind(test, ...)' 2>/dev/null | fzf --reverse); [[ -n $t ]] && bazel test $t; }
-bb() { local t; t=$(bazel query 'kind(".*_binary|.*_library", ...)' 2>/dev/null | fzf --reverse); [[ -n $t ]] && bazel build $t; }
