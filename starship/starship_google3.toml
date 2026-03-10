@@ -1,0 +1,55 @@
+# Minimal Starship config for google3
+palette = "gruvbox_dark"
+
+format = """
+$jobs
+${custom.google3_dir}
+$cmd_duration
+$line_break
+$character"""
+
+[custom.google3_dir]
+command = '''
+if [[ $PWD =~ ^/google/src/cloud/([^/]+)/([^/]+)/google3(.*) ]]; then
+  client_name=${BASH_REMATCH[2]}
+  g3_path=${BASH_REMATCH[3]}
+  printf "//%s" "${g3_path#/}"
+fi
+'''
+when = "[[ $PWD =~ ^/google/src/cloud/[^/]+/[^/]+/google3 ]]"
+style = "blue"
+format = "in [$output]($style) "
+
+[character]
+success_symbol = "[❯](green)"
+error_symbol = "[❯](red)"
+vimcmd_symbol = "[❮](yellow)"
+
+[cmd_duration]
+min_time = 2_000
+style = "yellow"
+format = "took [$duration]($style) "
+
+[jobs]
+symbol = "✦ "
+style = "bold yellow"
+format = "[$symbol$number]($style)"
+
+# Inherit the palette
+[palettes.gruvbox_dark]
+black = "#282828"
+red = "#cc241d"
+green = "#98971a"
+yellow = "#d79921"
+blue = "#458588"
+purple = "#b16286"
+cyan = "#689d6a"
+white = "#a89984"
+bright-black = "#928374"
+bright-red = "#fb4934"
+bright-green = "#b8bb26"
+bright-yellow = "#fabd2f"
+bright-blue = "#83a598"
+bright-purple = "#d3869b"
+bright-cyan = "#8ec07c"
+bright-white = "#ebdbb2"

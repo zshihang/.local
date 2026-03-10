@@ -44,7 +44,6 @@ local context = import 'context.libsonnet';
   annoucements: {
     or: [
       { list: 'google@google.com' },
-      { list: 'eng-announce@google.com' },
       { list: 'googlers-wa@google.com' },
       { list: 'everyone-sea-slu' },
       { list: 'quantum-quacs@google.com' },
@@ -54,6 +53,13 @@ local context = import 'context.libsonnet';
       { list: 'quantum-swe@google.com' },
       { list: 'quantum-hardware@google.com' },
       { list: 'quantum-software@google.com' },
+    ],
+  },
+
+  interest: {
+    or: [
+      { list: 'vi-users@google.com' },
+      { list: 'eng-announce@google.com' },
     ],
   },
 
@@ -94,20 +100,45 @@ local context = import 'context.libsonnet';
       $.gerrit,
       $.tap,
       $.noice,
-      $.dogfood,
+    ],
+  },
+
+  now: {
+    or: [
+      { and: [$.fromManagers, helpers.directToMe] },
+      { and: [$.annoucements, { not: $.tgif }, { not: $.skipList }] },
+      $.omg,
+    ],
+  },
+
+  todo: {
+    or: [
+      $.totw,
+      $.grad,
+      $.tgif,
+    ],
+  },
+
+  ignore: {
+    and: [
+      helpers.notToMe,
+      $.skipList,
     ],
   },
 
   k8s: {
     or: [
-      { list: 'kubernetes-sig-auth@googlegroups.com' }
+      { list: 'kubernetes-sig-auth@googlegroups.com' },
       { list: 'sig-storage@googlegroups.com' },
       { list: 'dev@kubernetes.io' },
     ],
   },
 
   dogfood: {
-    list: 'dogfood-announce@google.com',
+    or: [
+      { list: 'dogfood-announce@google.com' },
+      { list: 'dogfood-announce-us@google.com' },
+    ],
   },
 
   grad: {

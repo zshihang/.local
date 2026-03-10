@@ -65,7 +65,14 @@ local filters = import 'filters.libsonnet';
       name:: 'dogfood',
       filter: filters.dogfood,
       actions+: {
-        labels: ['k8s'],
+        labels: ['dogfood'],
+      },
+    },
+    actions.skip {
+      name:: 'interest',
+      filter: filters.interest,
+      actions+: {
+        labels: ['interest'],
       },
     },
   ] + lib.chainFilters([
@@ -80,21 +87,11 @@ local filters = import 'filters.libsonnet';
     // should be marked as important.
     actions.important {
       name:: 'NOW',
-      filter: { or: [
-        // emails addressed to me.
-        { and: [filters.fromManagers, helpers.directToMe] },
-        // emails not addressed to me but are important
-        { and: [filters.annoucements, { not: filters.tgif }, { not: filters.skipList }] },
-        filters.omg,
-      ] },
+      filter: filters.now,
     },
     actions.star {
       name:: 'TODO',
-      filter: { or: [
-        filters.totw,
-        filters.grad,
-        filters.tgif,
-      ] },
+      filter: filters.todo,
     },
     // else if emails are addressed to me, i might want to take a look at them.
     // actions.skip {
@@ -105,10 +102,7 @@ local filters = import 'filters.libsonnet';
     // else if labeled emails not addressed to me, they should be ignored.
     actions.ignore {
       name:: 'IGNORE',
-      filter: { and: [
-        helpers.notToMe,
-        filters.skipList,
-      ] },
+      filter: filters.ignore,
     },
   ]),
   tests: [
@@ -162,6 +156,44 @@ local filters = import 'filters.libsonnet';
       actions: {
         archive: true,
         markRead: true,
+        markImportant: false,
+      },
+    },
+    {
+      name: 'vi-users',
+      messages: [
+        {
+          lists: ['vi-users@google.com'],
+        },
+      ],
+      actions: {
+        labels: ['interest'],
+        archive: true,
+        markImportant: false,
+      },
+    },
+    {
+      name: 'eng-announce',
+      messages: [
+        {
+          lists: ['eng-announce@google.com'],
+        },
+      ],
+      actions: {
+        labels: ['interest'],
+        archive: true,
+        markImportant: false,
+      },
+    },
+    {
+      name: 'dogfood',
+      messages: [
+        { lists: ['dogfood-announce@google.com'] },
+        { lists: ['dogfood-announce-us@google.com'] },
+      ],
+      actions: {
+        labels: ['dogfood'],
+        archive: true,
         markImportant: false,
       },
     },
