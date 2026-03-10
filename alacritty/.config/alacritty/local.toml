@@ -1,0 +1,46 @@
+# Combined Link Hints (Standard + Google)
+# Cmd-click to open URLs
+
+# Standard URLs
+[[hints.enabled]]
+command = "open"
+hyperlinks = true
+post_processing = true
+mouse.enabled = true
+mouse.mods = "Command"
+regex = "(ipfs:|ipns:|magnet:|mailto:|gemini://|gopher://|https://|http://|news:|file:|git://|ssh:|ftp://)[^\u0000-\u001F\u007F-\u009F<>\"\\s{-}\\^()`\\\\]+"
+
+# Google: b/123
+[[hints.enabled]]
+command = { program = "sh", args = ["-c", "open https://b.corp.google.com/${1#b/}", "--"] }
+mouse.enabled = true
+mouse.mods = "Command"
+regex = "(?-u:\\b)b/\\d+(?-u:\\b)"
+
+# Google: cl/123
+[[hints.enabled]]
+command = { program = "sh", args = ["-c", "open https://cl.corp.google.com/${1#cl/}", "--"] }
+mouse.enabled = true
+mouse.mods = "Command"
+regex = "(?-u:\\b)cl/\\d+(?-u:\\b)"
+
+# Google: cr/123
+[[hints.enabled]]
+command = { program = "sh", args = ["-c", "open https://cr.google.com/${1#cr/}", "--"] }
+mouse.enabled = true
+mouse.mods = "Command"
+regex = "(?-u:\\b)cr/\\d+(?-u:\\b)"
+
+# Google: o/word
+[[hints.enabled]]
+command = { program = "sh", args = ["-c", "open https://o.google.com/${1#o/}", "--"] }
+mouse.enabled = true
+mouse.mods = "Command"
+regex = "(?-u:\\b)o/[\\w\\-]+(?-u:\\b)"
+
+# Google: go/word
+[[hints.enabled]]
+command = { program = "sh", args = ["-c", "open https://${1}", "--"] }
+mouse.enabled = true
+mouse.mods = "Command"
+regex = "(?-u:\\b)go/[\\w\\-]+(?-u:\\b)"
