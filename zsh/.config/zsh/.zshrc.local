@@ -15,18 +15,8 @@ alias get_mint=/google/data/ro/projects/gaiamint/bin/get_mint
 alias mdformat=/google/data/ro/teams/g3doc/mdformat
 alias miracl_cli=/google/bin/releases/miracl-tools/miracl_cli/miracl_cli
 alias gbazelisk=/google/bin/releases/bazel-infra/bazelisk/gbazelisk
-alias hgconfig="vim ~/.hgrc"
+alias hgconfig="vim ~/.config/hg/hgrc"
 alias hg="chg"
-
-# Infrastructure & Projects
-export SANDBOX_NAME="zshihang-gke-sandbox"
-export SANDBOX_LOCATION="us-central1-c"
-export DEV_PROJECT=zshihang-gke-dev
-export GKE_DEV_PROJECT=zshihang-gke-dev
-
-# Path (Machine specific additions)
-export PATH="/usr/local/google/home/zshihang/.local/bin:$PATH"
-export PATH="/usr/lib/cargo/bin:$PATH"
 
 # Custom Blaze Binary jumper
 # Usage: bcj (Blaze Code Jump)

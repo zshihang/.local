@@ -10,4 +10,4 @@ set -g @sessionizer-dirs-deep "/google/src/cloud/$USER"
 set -g @sessionizer-fd-flags "--exclude jj-export-* --exclude fig-export-* --exclude hg-export-* --exclude .git --exclude .jj"
 
 # Hook the Google cloud discovery loop into the engine
-set -g @sessionizer-deep-provider "$HOME/workspace/dotfiles/.local/tmux/discovery.sh"
+set -g @sessionizer-deep-provider "$HOME/.tmux/local_discovery.sh"

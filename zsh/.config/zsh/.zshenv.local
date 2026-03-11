@@ -1,0 +1,20 @@
+# --- Machine Specific Environment ---
+export PATH="/usr/local/google/home/zshihang/.local/bin:$PATH"
+export PATH="/usr/lib/cargo/bin:$PATH"
+
+# Infrastructure & Projects
+export SANDBOX_NAME="zshihang-gke-sandbox"
+export SANDBOX_LOCATION="us-central1-c"
+export DEV_PROJECT=zshihang-gke-dev
+export GKE_DEV_PROJECT=zshihang-gke-dev
+
+# Regex to detect "local/work" context (used for path-aware configs)
+export LOCAL_CONTEXT_REGEX="^($HOME/workspace/google|/google/src/cloud/)"
+
+# Generality: Extraction logic for special workspace names
+# If the regex below captures a group, the first group will be used as the workspace name.
+export LOCAL_CONTEXT_REGEX="^/google/src/cloud/[^/]+/([^/]+)/google3"
+
+# Generality: Path transformation for prompt/status line
+# Format: "SearchRegex|ReplaceString"
+export PATH_TRANSFORM_REGEX="^/google/src/cloud/[^/]+/[^/]+/google3/?|//"
