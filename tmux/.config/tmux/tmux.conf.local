@@ -10,6 +10,7 @@ set -g @sessionizer-dirs-deep "/google/src/cloud/$USER"
 set -g @sessionizer-fd-flags "--exclude jj-export-* --exclude fig-export-* --exclude hg-export-* --exclude .git --exclude .jj"
 
 # Path transformation for pane borders (native tmux variables)
+set -g @context-regex "^/google/src/cloud/[^/]+/([^/]+)/google3/?"
 set -g @path-regex "^/google/src/cloud/[^/]+/([^/]+)/google3/?"
 set -g @path-repl "[\\1] //"
 
