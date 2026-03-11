@@ -15,4 +15,4 @@ set -g @path-regex "^/google/src/cloud/[^/]+/([^/]+)/google3/?"
 set -g @path-repl "[\\1] //"
 
 # Hook the Google cloud discovery loop into the engine
-set -g @sessionizer-deep-provider "$HOME/.tmux/local_discovery.sh"
+set -g @sessionizer-deep-provider "$HOME/.config/tmux/scripts/local_discovery.sh"
