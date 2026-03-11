@@ -60,6 +60,7 @@ local context = import 'context.libsonnet';
     or: [
       { list: 'vi-users@google.com' },
       { list: 'eng-announce@google.com' },
+      { list: 'ciderlsp-users@google.com' },
     ],
   },
 
