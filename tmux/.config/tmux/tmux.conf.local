@@ -5,7 +5,7 @@ set -ga status-left "#[fg=colour233,bg=colour137] #(gcertstatus --nocheck_ssh --
 set -ga status-left '#{?client_prefix,#[bg=red,fg=white,bold] ^A ,}'
 
 # sessionizer: google-specific configuration
-set -g @sessionizer-dirs "$HOME/workspace $HOME/workspace/google"
+set -g @sessionizer-dirs "$HOME/workspace $HOME/workspace/google $HOME/workspace/google/quantum"
 set -g @sessionizer-dirs-deep "/google/src/cloud/$USER"
 set -g @sessionizer-fd-flags "--exclude jj-export-* --exclude fig-export-* --exclude hg-export-* --exclude .git --exclude .jj"
 

@@ -41,3 +41,22 @@ fi
 # Search toolkit
 b() { (xdg-open "https://b.corp.google.com/${1:-}" &> /dev/null &) }
 cs() { (xdg-open "https://cs.corp.google.com/search?q=$*" &> /dev/null &) }
+
+# Auto-refresh broken network mounts (e.g., after gcert expiration)
+autoload -Uz add-zsh-hook
+_last_cwd_check=0
+
+function refresh_cwd_if_needed_precmd() {
+  # Fast path match for known network paths
+  [[ "$PWD" != /google/src/cloud/* && "$PWD" != /google/bin/releases/* && "$PWD" != /google/data/* ]] && return
+
+  # Throttle the check to once every 3 seconds to prevent prompt hang
+  (( SECONDS - _last_cwd_check < 3 )) && return
+  _last_cwd_check=$SECONDS
+
+  # If directory is inaccessible, try to 'cd .' to force a kernel refresh
+  if ! [[ -d . ]] 2>/dev/null; then
+    cd . >/dev/null 2>&1
+  fi
+}
+add-zsh-hook precmd refresh_cwd_if_needed_precmd
