@@ -1,0 +1,18 @@
+set-option -g allow-rename on
+
+# set -ga status-left "#[fg=colour233,bg=colour137]#(gcertstatus --nocheck_ssh --check_remaining=10h --quiet || echo \" $(gcertstatus --nocheck_ssh --format=statusbar) \")"
+set -ga status-left "#[fg=colour233,bg=colour137] #(gcertstatus --nocheck_ssh --format=statusbar | xargs) "
+set -ga status-left '#{?client_prefix,#[bg=red,fg=white,bold] ^A ,}'
+
+# sessionizer: google-specific configuration
+set -g @sessionizer-dirs "$HOME/workspace $HOME/workspace/google $HOME/workspace/google/quantum"
+set -g @sessionizer-dirs-deep "/google/src/cloud/$USER"
+set -g @sessionizer-fd-flags "--exclude jj-export-* --exclude fig-export-* --exclude hg-export-* --exclude .git --exclude .jj"
+
+# Path transformation for pane borders (native tmux variables)
+set -g @context-regex "^/google/src/cloud/[^/]+/([^/]+)/google3/?"
+set -g @path-regex "^/google/src/cloud/[^/]+/([^/]+)/google3/?"
+set -g @path-repl "[\\1] //"
+
+# Hook the Google cloud discovery loop into the engine
+set -g @sessionizer-deep-provider "$HOME/.config/tmux/scripts/local_discovery.sh"
