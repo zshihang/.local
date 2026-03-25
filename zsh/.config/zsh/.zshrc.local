@@ -1,9 +1,9 @@
 export host=ckg.c.googlers.com
 
 # quick work ssh (using official go/glinux/roadwarrior)
-# -t starts/attaches tmux; -r skips gcert if >1hr remains
-alias swork='rw -t -r ckg'
-alias gswork='rw --gmosh -t -r ckg'
+# -t starts/attaches tmux; -r skips gcert if >2hr remains
+alias swork='rw -t -r --check_remaining_duration 2h ckg'
+alias gswork='rw --gmosh -t -r --check_remaining_duration 2h ckg'
 
 # Auto-refresh broken network mounts (e.g., after gcert expiration)
 autoload -Uz add-zsh-hook
