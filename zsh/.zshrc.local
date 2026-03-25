@@ -1,6 +1,40 @@
 export host=ckg.c.googlers.com
 
 # quick work ssh (using official go/glinux/roadwarrior)
-# -t starts/attaches tmux; -r skips gcert if >1hr remains
-alias swork='rw -t -r ckg'
-alias gswork='rw --gmosh -t -r ckg'
+# -t starts/attaches tmux; -r skips gcert if >2hr remains
+alias swork='rw -t -r --check_remaining_duration 2h ckg'
+# quick work gmosh (using official go/glinux/roadwarrior)
+# Refreshes certs, sets up a background SSH agent forwarding tunnel, and connects via gmosh.
+function gswork() {
+  local target_host="${1:-ckg}"
+  
+  # 1. Ensure local cert is valid before attempting the SSH bridge
+  if ! gcertstatus --nocheck_ssh --quiet --check_remaining=2h 2>/dev/null; then
+    echo "🔑 Refreshing LOAS credentials..."
+    gcert
+  fi
+
+  # 2. Set up the background SSH tunnel for gnubby forwarding.
+  # We name the socket /tmp/agent.gmosh_bridge so the cloudtop's fixup_ssh_auth_sock 
+  # script automatically discovers and uses it!
+  echo "🌉 Setting up self-healing SSH agent bridge to ${target_host}..."
+  
+  # Prevent background process leaks by killing old bridge loops and SSH processes for this host
+  local marker="gmosh_bridge_watchdog_${target_host}"
+  pkill -f "$marker" 2>/dev/null || true
+  pkill -f "ssh -N .*agent\.gmosh_bridge.*$target_host" 2>/dev/null || true
+  
+  # Launch the watchdog loop in the background, detached from the terminal
+  (
+    exec -a "$marker" zsh -c "
+      while true; do
+        ssh -N -o ConnectTimeout=5 -o ExitOnForwardFailure=yes -o ServerAliveInterval=10 -o ServerAliveCountMax=3 -o StreamLocalBindUnlink=yes -R '/tmp/agent.gmosh_bridge:\$SSH_AUTH_SOCK' '$target_host' 2>/dev/null
+        sleep 5
+      done
+    "
+  ) >/dev/null 2>&1 &!
+  
+  # 3. Connect via gmosh! (rw handles remote gcert and tmux attaching)
+  echo "🚀 Launching gmosh..."
+  rw --gmosh -t -r --check_remaining_duration 2h "$target_host"
+}
