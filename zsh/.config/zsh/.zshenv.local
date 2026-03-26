@@ -1,0 +1,3 @@
+# Google/CitC context detection
+# Used by starship and jj path-aware configuration logic
+export LOCAL_CONTEXT_REGEX='^/google/src/cloud/([^/]+)/'

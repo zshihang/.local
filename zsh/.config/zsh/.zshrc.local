@@ -1,3 +1,8 @@
+alias gemini='/google/bin/releases/gemini-cli/tools/gemini'
+
+# LLM wrapper override
+_llm() { gemini "$1"; }
+
 # Auto-refresh broken network mounts (e.g., after gcert expiration)
 autoload -Uz add-zsh-hook
 _last_cwd_check=0

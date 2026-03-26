@@ -3,6 +3,11 @@
 # This script is sourced by .xxxxx/install.sh
 # It contains Google-specific or machine-specific setup.
 
+# Add Google-internal release paths for tool detection
+EXTRA_TOOL_PATHS+=(
+  "/google/bin/releases/gemini-cli/tools/%tool%"
+)
+
 install_roadwarrior_macos() {
   if command_exists roadwarrior || command_exists rw; then
     info "roadwarrior already installed"
