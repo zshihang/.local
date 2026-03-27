@@ -1,0 +1,4 @@
+# Gerrit & Sync Rules
+
+- **Gerrit Workflow**: CRITICAL: Always extract, preserve, and re-apply the exact `Change-Id: I...` footer when updating commit messages or rebasing to prevent duplicate CLs.
+- **Syncing**: In Git-backed repos, sync by running `jj git fetch` followed by `jj rebase -d main@origin`.
