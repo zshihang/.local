@@ -96,7 +96,6 @@ local context = import 'context.libsonnet';
     or: [
       $.cls,
       $.issues,
-      $.gthanks,
       $.yaqs,
       $.gerrit,
       $.tap,
