@@ -1,0 +1,7 @@
+source /usr/share/vim/google/glug/bootstrap.vim
+Glug blazedeps auto_filetypes=`['go']`
+Glug googlespell
+Glug google-filetypes
+
+Plug 'sso://user/zshihang/blink-ciderlsp'
+Plug 'sso://user/idk/cider-agent.nvim'

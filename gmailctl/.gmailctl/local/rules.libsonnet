@@ -19,7 +19,13 @@ local filters = import 'filters.libsonnet';
         labels: ['gerrit'],
       },
     },
-    helpers.rule('gthanks', filters.gthanks, actions.label('gthanks')),
+    actions.skip {
+      name:: 'gthanks',
+      filter: filters.gthanks,
+      actions+: {
+        labels: ['gthanks'],
+      },
+    },
     actions.skip {
       name:: 'issues',
       filter: filters.issues,
@@ -49,40 +55,54 @@ local filters = import 'filters.libsonnet';
       },
     },
     actions.skip {
-      name:: 'sig-auth',
-      filter: filters.sigAuth,
+      name:: 'k8s',
+      filter: filters.k8s,
       actions+: {
-        labels: ['sig-auth'],
+        labels: ['k8s'],
+      },
+    },
+    actions.skip {
+      name:: 'dogfood',
+      filter: filters.dogfood,
+      actions+: {
+        labels: ['dogfood'],
+      },
+    },
+    actions.skip {
+      name:: 'interest',
+      filter: filters.interest,
+      actions+: {
+        labels: ['interest'],
       },
     },
   ] + lib.chainFilters([
-    actions.ignore {
-      // if emails are spam, they should be ignored.
-      name:: 'SPAM',
-      filter: { or: [
-        filters.presubmits,
-      ] },
-    },
+    // actions.ignore {
+    //   // if emails are spam, they should be ignored.
+    //   name:: 'SPAM',
+    //   filter: { or: [
+    //     // filters.presubmits,
+    //   ] },
+    // },
     // else if emails are important which may or may not addressed to me, they
     // should be marked as important.
     actions.important {
       name:: 'NOW',
-      filter: { or: [
-        // emails addressed to me.
-        { and: [filters.fromManagers, helpers.directToMe] },
-        // emails not addressed to me but are important
-        { and: [filters.annoucements, { not: filters.tgif }] },
-        filters.omg,
-      ] },
+      filter: filters.now,
     },
     actions.star {
       name:: 'TODO',
-      filter: { or: [
-        filters.totw,
-        filters.sigAuth,
-        filters.grad,
-        filters.tgif,
-      ] },
+      filter: filters.todo,
+    },
+    // else if emails are addressed to me, i might want to take a look at them.
+    // actions.skip {
+    //   name:: 'LATER',
+    //   filters: filters.toMe,
+    //   labels: ['LATER'],
+    // },
+    // else if labeled emails not addressed to me, they should be ignored.
+    actions.ignore {
+      name:: 'IGNORE',
+      filter: filters.ignore,
     },
   ]),
   tests: [
@@ -96,6 +116,85 @@ local filters = import 'filters.libsonnet';
       ],
       actions: {
         markImportant: true,
+      },
+    },
+    {
+      name: 'announcements',
+      messages: [
+        {
+          lists: ['google@google.com'],
+          subject: 'A difficult decision to set us up for the future',
+        },
+      ],
+      actions: {
+        markImportant: true,
+      },
+    },
+    {
+      name: 'tgif',
+      messages: [
+        {
+          lists: ['google@google.com'],
+          subject: 'At TGIF: XXX',
+        },
+      ],
+      actions: {
+        labels: ['tgif'],
+        archive: true,
+        markImportant: false,
+        star: true,
+      },
+    },
+    {
+      name: 'quacs',
+      messages: [
+        {
+          lists: ['quacs@google.com'],
+          from: 'nobody@google.com',
+        },
+      ],
+      actions: {
+        archive: true,
+        markRead: true,
+        markImportant: false,
+      },
+    },
+    {
+      name: 'vi-users',
+      messages: [
+        {
+          lists: ['vi-users@google.com'],
+        },
+      ],
+      actions: {
+        labels: ['interest'],
+        archive: true,
+        markImportant: false,
+      },
+    },
+    {
+      name: 'eng-announce',
+      messages: [
+        {
+          lists: ['eng-announce@google.com'],
+        },
+      ],
+      actions: {
+        labels: ['interest'],
+        archive: true,
+        markImportant: false,
+      },
+    },
+    {
+      name: 'dogfood',
+      messages: [
+        { lists: ['dogfood-announce@google.com'] },
+        { lists: ['dogfood-announce-us@google.com'] },
+      ],
+      actions: {
+        labels: ['dogfood'],
+        archive: true,
+        markImportant: false,
       },
     },
   ],

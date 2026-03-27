@@ -1,3 +1,8 @@
 # Google/CitC context detection
 # Used by starship and jj path-aware configuration logic
 export LOCAL_CONTEXT_REGEX='^/google/src/cloud/([^/]+)/'
+
+# Extra paths for tool detection in install.sh
+EXTRA_TOOL_PATHS=(
+  "/google/bin/releases/gemini-cli/tools/%tool%"
+)

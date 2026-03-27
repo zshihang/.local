@@ -1,0 +1,43 @@
+# ----------
+# DEFAULTS |
+# ----------
+#
+build -c opt --forge
+mpm -c opt
+run -c opt
+
+# -------
+# BUILD |
+# -------
+#
+# speed up next build if err
+build --keep_going
+# increase the number of jobs for better parallelism.
+build --jobs=400
+
+# ------
+# TEST |
+# ------
+#
+# only build test targets
+test --build_tests_only
+# output all
+test --test_output=all
+
+# ----------
+# COVERAGE |
+# ----------
+#
+# run on forge
+coverage --forge
+
+
+# ------
+# MISC |
+# ------
+#
+# show full documentation
+help --long
+
+# clean in the background
+clean --expunge_async

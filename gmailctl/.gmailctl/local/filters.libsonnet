@@ -10,9 +10,6 @@ local context = import 'context.libsonnet';
     'neven@google.com',
   ]),
 
-  toReports:: helpers.toAnyOf([
-  ]),
-
   balglobal: {
     from: 'balglobal.com',
   },
@@ -21,27 +18,49 @@ local context = import 'context.libsonnet';
     cc: 'reviewlog@google.com',
   },
 
-
   ganpati: { from: 'ganpati-noreply@google.com' },
+
+  tap: { from: 'noreply-tap-eng@google.com' },
+
+  noice: {
+    or: [
+      { from: 'nobody@google.com' },
+      { from: 'mdb.cloud-console-test+noreply@google.com' },
+      { to: 'quantum-cloud-auto@google.com' },
+    ],
+  },
 
   gerrit: {
     or: [
       { cc: 'noreply+kokoro@google.com' },
       { from: 'noreply+kokoro@google.com' },
       { from: '(Gerrit)' },
+      { subject: '(borq-config[main])' },
+      { list: 'gerrit-qswim.quantum-review.git.corp.google.com' },
+      { subject: 'pyle3[main]' },
     ],
   },
 
   annoucements: {
     or: [
       { list: 'google@google.com' },
-      { list: 'eng-announce@google.com' },
       { list: 'googlers-wa@google.com' },
       { list: 'everyone-sea-slu' },
       { list: 'quantum-quacs@google.com' },
       { list: 'quacs@google.com' },
       { list: 'borq-team@google.com' },
       { list: 'research-sea-fun@google.com' },
+      { list: 'quantum-swe@google.com' },
+      { list: 'quantum-hardware@google.com' },
+      { list: 'quantum-software@google.com' },
+    ],
+  },
+
+  interest: {
+    or: [
+      { list: 'vi-users@google.com' },
+      { list: 'eng-announce@google.com' },
+      { list: 'ciderlsp-users@google.com' },
     ],
   },
 
@@ -68,12 +87,59 @@ local context = import 'context.libsonnet';
     ],
   },
 
-  presubmits: {
-    from: 'mdb.cloud-kubernetes-guitar-presubmit-jobs@google.com',
+  // presubmits: {
+  //   from: 'mdb.cloud-kubernetes-guitar-presubmit-jobs@google.com',
+  // },
+
+  // skip inbox
+  skipList: {
+    or: [
+      $.cls,
+      $.issues,
+      $.gthanks,
+      $.yaqs,
+      $.gerrit,
+      $.tap,
+      $.noice,
+    ],
   },
 
-  sigAuth: {
-    list: 'kubernetes-sig-auth@googlegroups.com',
+  now: {
+    or: [
+      { and: [$.fromManagers, helpers.directToMe] },
+      { and: [$.annoucements, { not: $.tgif }, { not: $.skipList }] },
+      $.omg,
+    ],
+  },
+
+  todo: {
+    or: [
+      $.totw,
+      $.grad,
+      $.tgif,
+    ],
+  },
+
+  ignore: {
+    and: [
+      helpers.notToMe,
+      $.skipList,
+    ],
+  },
+
+  k8s: {
+    or: [
+      { list: 'kubernetes-sig-auth@googlegroups.com' },
+      { list: 'sig-storage@googlegroups.com' },
+      { list: 'dev@kubernetes.io' },
+    ],
+  },
+
+  dogfood: {
+    or: [
+      { list: 'dogfood-announce@google.com' },
+      { list: 'dogfood-announce-us@google.com' },
+    ],
   },
 
   grad: {

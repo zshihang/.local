@@ -1,7 +1,50 @@
+#------------------------------------------------------------------------------
+# ## GOOGLE-SPECIFIC CONFIG #
+#------------------------------------------------------------------------------
+
+# Aliases
+alias k9s=/google/data/ro/teams/giza/projects/devtools/k9s
 alias gemini='/google/bin/releases/gemini-cli/tools/gemini'
+alias admin_session='/usr/bin/admin_session'
+alias admin_span='/google/data/ro/teams/axt-storage/admin_span/live/admin_span'
+alias analog=/google/bin/releases/borg-logs-ui/analog-cli/analog
+alias annealing=/google/bin/releases/rollouts/annealing/annealing
+alias capabilities="/google/data/ro/projects/borg-sre/capabilities"
+alias cclean='/google/src/head/depot/google3/devtools/maintenance/cclean/cclean'
+alias get_mint=/google/data/ro/projects/gaiamint/bin/get_mint
+alias giraffe=/google/bin/releases/gke-giraffe/tools/prod/main
+alias mdformat=/google/data/ro/teams/g3doc/mdformat
+alias miracl_cli=/google/bin/releases/miracl-tools/miracl_cli/miracl_cli
+alias gbazelisk=/google/bin/releases/bazel-infra/bazelisk/gbazelisk
+alias hgconfig="vim ~/.config/hg/hgrc"
+alias hg="chg"
 
 # LLM wrapper override
 _llm() { gemini "$1"; }
+
+# Custom Blaze Binary jumper
+# Usage: bcj (Blaze Code Jump)
+function bcj() {
+  if [[ $PWD =~ (.*)/blaze-bin(.*) ]]; then
+    cd "${match[1]}${match[2]}"
+  else
+    cd "${PWD/\/google3//google3/blaze-bin}"
+  fi
+}
+
+# Google3 Bash completions
+source /etc/bash_completion.d/jjd 2>/dev/null
+[[ -f /etc/bash_completion.d/p4 ]] && . /etc/bash_completion.d/p4
+[[ -f /etc/bash_completion.d/g4d ]] && . /etc/bash_completion.d/g4d
+[[ -f /etc/bash_completion.d/hgd ]] && . /etc/bash_completion.d/hgd
+
+if [ -d /google/data ]; then
+  fpath=(/google/src/files/head/depot/google3/devtools/blaze/scripts/zsh_completion $fpath)
+fi
+
+# Search toolkit
+b() { (xdg-open "https://b.corp.google.com/${1:-}" &> /dev/null &) }
+cs() { (xdg-open "https://cs.corp.google.com/search?q=$*" &> /dev/null &) }
 
 # Auto-refresh broken network mounts (e.g., after gcert expiration)
 autoload -Uz add-zsh-hook
