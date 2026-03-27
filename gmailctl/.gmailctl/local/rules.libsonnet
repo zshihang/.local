@@ -19,7 +19,13 @@ local filters = import 'filters.libsonnet';
         labels: ['gerrit'],
       },
     },
-    helpers.rule('gthanks', filters.gthanks, actions.label('gthanks')),
+    actions.skip {
+      name:: 'gthanks',
+      filter: filters.gthanks,
+      actions+: {
+        labels: ['gthanks'],
+      },
+    },
     actions.skip {
       name:: 'issues',
       filter: filters.issues,
