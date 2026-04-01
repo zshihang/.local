@@ -18,6 +18,8 @@ alias miracl_cli=/google/bin/releases/miracl-tools/miracl_cli/miracl_cli
 alias gbazelisk=/google/bin/releases/bazel-infra/bazelisk/gbazelisk
 alias hgconfig="vim ~/.config/hg/hgrc"
 alias hg="chg"
+alias jetski='/google/bin/releases/jetski-devs/tools/cli'
+
 
 # LLM wrapper override
 _llm() { gemini "$1"; }
@@ -64,3 +66,54 @@ function refresh_cwd_if_needed_precmd() {
   fi
 }
 add-zsh-hook precmd refresh_cwd_if_needed_precmd
+
+# Jetski Global Sync for gpowers
+_sync-jetski-configs-helper() {
+  local name="$1"
+  local marker_file="$2"
+  local user=$(printenv USER)
+  local config_file="/google/src/head/depot/configs/users/$user/_agents/${name}.json"
+  local target_dir="$HOME/.gemini/jetski/${name}"
+  echo "Syncing ${name} from $(basename "$config_file")..."
+  mkdir -p "$target_dir"
+  find "$target_dir/" -type l -delete
+  if [ -f "$config_file" ]; then
+    python3 -c '
+import json
+import sys
+try:
+    with open(sys.argv[1]) as f:
+        for entry in json.load(f).get("entries", []):
+            print(entry.get("path", ""))
+except FileNotFoundError:
+    pass
+' "$config_file" | while read -r sub_path; do
+      if [ -n "$sub_path" ]; then
+        local full_path="/google/src/head/depot/$sub_path"
+        if [ -f "$full_path/$marker_file" ]; then
+          echo "Linking $(basename "$sub_path")..."
+          ln -sf "$full_path" "$target_dir/"
+        else
+          for sub_dir in "$full_path"/*/; do
+            if [ -f "${sub_dir}${marker_file}" ]; then
+              echo "Linking $(basename "$sub_dir")..."
+              ln -sf "${sub_dir%/}" "$target_dir/"
+            fi
+          done
+        fi
+      fi
+    done
+  fi
+}
+
+sync-jetski-configs() {
+  _sync-jetski-configs-helper "skills" "SKILL.md"
+  _sync-jetski-configs-helper "agents" "agent.json"
+  echo "Done! Run /skill list or /agent list in jetski-cli to verify."
+}
+
+alias sync-jetski-skills=sync-jetski-configs
+alias sync-jetski-agents=sync-jetski-configs
+
+# Automatically sync jetski configs in the background on shell startup
+# sync-jetski-configs >/dev/null 2>&1 &
