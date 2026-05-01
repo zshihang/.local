@@ -8,11 +8,13 @@ ps -eo pid,ppid,user,%mem,rss,comm --sort=-%mem | head -n 11 | awk '{print $0 " 
 
 info "\n--- Likely 'Ghost' Processes (Orphaned/LSPs) ---"
 # Find common leakers that are children of PID 1 (orphaned)
-ghosts=$(ps -eo pid,ppid,comm | grep -E "gopls|rust-analyzer|node|connectd|envelope|admin_server" | awk '$2 == 1 {print $1}')
+# We specifically look for connectd, gopls, and node/gemini agents
+ghosts=$(ps -eo pid,ppid,comm,etime | grep -E "gopls|rust-analyzer|node|connectd" | awk '$2 == 1 {print $1}')
 
 if [[ -n "$ghosts" ]]; then
-    ps -p $ghosts -o pid,user,%mem,comm | awk 'NR>1'
-    echo -e "\nTo kill all ghosts: kill \$(ps -eo pid,ppid,comm | grep -E 'gopls|rust-analyzer' | awk '\$2 == 1 {print \$1}')"
+    echo "Found $(echo "$ghosts" | wc -w) orphaned background processes:"
+    ps -p $ghosts -o pid,user,%mem,%cpu,etime,comm | awk 'NR>1'
+    echo -e "\nTo kill all ghosts: ps -eo pid,ppid,comm | grep -E 'gopls|rust-analyzer|node|connectd' | awk '\$2 == 1 {print \$1}' | xargs kill -9"
 else
     echo "No obvious ghost processes found."
 fi
